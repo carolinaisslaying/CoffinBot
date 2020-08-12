@@ -36,7 +36,7 @@ class Information(commands.Cog, wavelink.WavelinkMixin):
 
     @commands.command(name="version", description="Provides you with the bot's current version.")
     async def version(self, ctx):
-        await ctx.send(f"{self.bot.settings['formats']['error']} **Version:** The bot is currently on "
+        await ctx.send(f"{self.bot.settings['formats']['info']} **Version:** The bot is currently on "
                        f"`{self.bot.version['version']}`")
 
 
