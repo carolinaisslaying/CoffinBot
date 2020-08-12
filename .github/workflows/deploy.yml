@@ -23,6 +23,6 @@ jobs:
                   mkdir ~/.kube
                   echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
             - name: Set image
-              run: kubectl set image deployment/bot bot=${{ secrets.DOCKER_URL }}/coffinbot:${GITHUB_REF#refs/tags/}
+              run: kubectl set image deployment/coffinbot bot=${{ secrets.DOCKER_URL }}/coffinbot:${GITHUB_REF#refs/tags/}
             - name: Rollout status
-              run: kubectl rollout status deployment/bot
+              run: kubectl rollout status deployment/coffinbot
