@@ -42,6 +42,10 @@ class Playback(commands.Cog, wavelink.WavelinkMixin):
     @commands.command(name="play", description="Joins the bot to your channel and play's coffin dance.")
     async def play(self, ctx):
         async with ctx.channel.typing():
+            if ctx.author.voice is None:
+                return await ctx.send(f"{self.bot.settings['formats']['error']} **Not connected:** You must be "
+                                      f"connected to a voice channel to run this command.")
+
             player = self.bot.wavelink.get_player(ctx.guild.id)
             if player.is_connected:
                 return await ctx.send(f"{self.bot.settings['formats']['error']} **Already connected:** I am already "
