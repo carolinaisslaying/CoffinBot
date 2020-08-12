@@ -1,6 +1,8 @@
 # CoffinBot
 *coffin dance noises*
 
+Uses [delver](https://delver.discordextremelist.xyz) for versioning.
+
 ## Requirements
 
 ### Libraries
