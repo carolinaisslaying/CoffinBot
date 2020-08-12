@@ -46,6 +46,11 @@ class Playback(commands.Cog, wavelink.WavelinkMixin):
                 return await ctx.send(f"{self.bot.settings['formats']['error']} **Not connected:** You must be "
                                       f"connected to a voice channel to run this command.")
 
+            join_channel = ctx.guild.get_channel(ctx.author.voice.channel.id)
+            if join_channel.permissions_for(ctx.guild.me).connect is False:
+                return await ctx.send(f"{self.bot.settings['formats']['error']} **Permissions error:** I do not have "
+                                      f"the required permission(s) to join the channel you are currently in.")
+
             player = self.bot.wavelink.get_player(ctx.guild.id)
             if player.is_connected:
                 return await ctx.send(f"{self.bot.settings['formats']['error']} **Already connected:** I am already "
