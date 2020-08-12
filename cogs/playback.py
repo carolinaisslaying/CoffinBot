@@ -76,7 +76,7 @@ class Playback(commands.Cog, wavelink.WavelinkMixin):
     async def stop(self, ctx):
         async with ctx.channel.typing():
             player = self.bot.wavelink.get_player(ctx.guild.id)
-            if player.channel_id is not ctx.author.voice.channel.id:
+            if player.channel_id != ctx.author.voice.channel.id:
                 return await ctx.send(f"{self.bot.settings['formats']['error']} **Channel error:** You must be in "
                                       f"the same channel as the bot to execute this command.")
 
