@@ -12,6 +12,9 @@ colouredlogs.install()
 with open("settings.json") as content:
     settings = json.load(content)
 
+with open("version.json") as content:
+    version = json.load(content)
+
 logging.basicConfig(level=logging.INFO)
 
 logging.info("Starting bot")
@@ -34,6 +37,7 @@ async def get_prefix(_, message):
 bot = commands.Bot(command_prefix=get_prefix, case_insensitive=True, owner_id=settings["owner"],
                    allowed_mentions=discord.AllowedMentions(roles=False, users=False, everyone=False))
 bot.settings = settings
+bot.version = version
 
 if __name__ == "__main__":
     for ext in botExtensions:
