@@ -3,7 +3,7 @@ import datetime
 import discord
 import json
 
-from colorama import Fore, init
+from colorama import init
 from discord.ext import commands, tasks
 
 init()
@@ -14,7 +14,6 @@ with open("settings.json") as content:
 
 logging.basicConfig(level=logging.INFO)
 
-fr = Fore.RESET
 logging.info("Starting bot")
 botExtensions = [
     "cogs.playback",
@@ -30,8 +29,8 @@ async def get_prefix(bot, message):
         return settings["prefix"]
 
 
-bot = commands.Bot(command_prefix=get_prefix, case_insensitive=True, owner_id=settings["owner"])
-bot.remove_command("help")
+bot = commands.Bot(command_prefix=get_prefix, case_insensitive=True, owner_id=settings["owner"],
+                   allowed_mentions=discord.AllowedMentions(roles=False, users=False, everyone=False))
 bot.settings = settings
 
 if __name__ == "__main__":
