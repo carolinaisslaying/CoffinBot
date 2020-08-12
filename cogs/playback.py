@@ -42,6 +42,11 @@ class Playback(commands.Cog, wavelink.WavelinkMixin):
     @commands.command(name="play", description="Joins the bot to your channel and play's coffin dance.")
     async def play(self, ctx):
         async with ctx.channel.typing():
+            player = self.bot.wavelink.get_player(ctx.guild.id)
+            if player.is_connected:
+                return await ctx.send(f"{self.bot.settings['formats']['error']} **Already connected:** I am already "
+                                      f"connected to a voice channel on this server.")
+
             async with aiohttp.ClientSession() as session:
                 async with session.get(self.bot.settings["coffinDanceGifURL"]) as resp:
                     buffer = BytesIO(await resp.read())
@@ -62,6 +67,10 @@ class Playback(commands.Cog, wavelink.WavelinkMixin):
     async def stop(self, ctx):
         async with ctx.channel.typing():
             player = self.bot.wavelink.get_player(ctx.guild.id)
+            if player.channel_id is not ctx.author.voice.channel:
+                await ctx.send(f"{self.bot.settings['formats']['error']} **Channel error:** You must be in the same "
+                               f"channel as the bot to execute this command.")
+
             if player.is_connected:
                 await player.destroy()
                 await ctx.send(f"{self.bot.settings['formats']['success']} **Stopped playing:** I have stopped playing "

@@ -18,8 +18,7 @@ class DEL(commands.Cog):
             async with session.post(f'https://api.discordextremelist.xyz/v2/bot/{self.bot.user.id}/stats',
                                     headers={"Authorization": self.bot.settings["del_token"],
                                              "Content-Type": 'application/json'},
-                                    data=json.dumps({"guildCount": len(self.bot.guilds),
-                                                     "shardCount": len(self.bot.shard_id)})
+                                    data=json.dumps({"guildCount": len(self.bot.guilds)})
                                     ) as r:
                 js = await r.json()
                 if js["error"]:
