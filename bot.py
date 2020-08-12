@@ -17,6 +17,7 @@ logging.basicConfig(level=logging.INFO)
 logging.info("Starting bot")
 botExtensions = [
     "cogs.playback",
+    "cogs.DEL",
     "jishaku"
 ]
 
