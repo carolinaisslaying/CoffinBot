@@ -22,7 +22,7 @@ botExtensions = [
 ]
 
 
-async def get_prefix(bot, message):
+async def get_prefix(_, message):
     if not message.guild:
         prefixes = ""
         return prefixes
