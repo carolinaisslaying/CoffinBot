@@ -51,6 +51,10 @@ class Playback(commands.Cog, wavelink.WavelinkMixin):
                 return await ctx.send(f"{self.bot.settings['formats']['error']} **Permissions error:** I do not have "
                                       f"the required permission(s) to join the channel you are currently in.")
 
+            if join_channel.permissions_for(ctx.guild.me).speak is False:
+                return await ctx.send(f"{self.bot.settings['formats']['error']} **Permissions error:** I do not have "
+                                      f"the required permission(s) to speak in the channel you are currently in.")
+
             player = self.bot.wavelink.get_player(ctx.guild.id)
             if player.is_connected:
                 return await ctx.send(f"{self.bot.settings['formats']['error']} **Already connected:** I am already "
@@ -76,11 +80,12 @@ class Playback(commands.Cog, wavelink.WavelinkMixin):
     async def stop(self, ctx):
         async with ctx.channel.typing():
             player = self.bot.wavelink.get_player(ctx.guild.id)
-            if player.channel_id != ctx.author.voice.channel.id:
-                return await ctx.send(f"{self.bot.settings['formats']['error']} **Channel error:** You must be in "
-                                      f"the same channel as the bot to execute this command.")
 
             if player.is_connected:
+                if player.channel_id != ctx.author.voice.channel.id:
+                    return await ctx.send(f"{self.bot.settings['formats']['error']} **Channel error:** You must be in "
+                                          f"the same channel as the bot to execute this command.")
+
                 await player.destroy()
                 await ctx.send(f"{self.bot.settings['formats']['success']} **Stopped playing:** I have stopped playing "
                                f"and left the channel.")
