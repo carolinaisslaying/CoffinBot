@@ -34,9 +34,10 @@ class Information(commands.Cog, wavelink.WavelinkMixin):
 
         await ctx.send(embed=embed)
 
-    @commands.command(name="privacy", description="Provides you with the bot's current version.")
+    @commands.command(name="version", description="Provides you with the bot's current version.")
     async def version(self, ctx):
-        await ctx.send(f"{self.bot.settings['formats']['error']} **Version:** The bot is currently on `{self.bot.version['version']}`")
+        await ctx.send(f"{self.bot.settings['formats']['error']} **Version:** The bot is currently on "
+                       f"`{self.bot.version['version']}`")
 
 
 def setup(bot):
