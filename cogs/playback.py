@@ -5,10 +5,19 @@ from io import BytesIO
 from discord.ext import commands
 
 
+class InvokedChannels(dict):
+    def __init__(self):
+        self = dict()
+
+    def add(self, key, value):
+        self[key] = value
+
+
 class Playback(commands.Cog, wavelink.WavelinkMixin):
 
     def __init__(self, bot):
         self.bot = bot
+        self.channels = InvokedChannels()
 
         if not hasattr(bot, "wavelink"):
             self.bot.wavelink = wavelink.Client(bot=self.bot)
@@ -21,6 +30,12 @@ class Playback(commands.Cog, wavelink.WavelinkMixin):
 
         if not tracks:
             tracks = await self.bot.wavelink.get_tracks(self.bot.settings["coffinVideoURL"])
+            if not tracks:
+                ctx = self.bot.get_channel(self.channels.get(payload.player.guild_id))
+                await ctx.send(f"{self.bot.settings['formats']['error']} **YT Ratelimited:** I am unable to "
+                               f"play this video as I am currently ratelimited by YouTube, please try "
+                               f"again later.")
+                return self.channels.pop(ctx.guild.id)
 
         await payload.player.play(tracks[0])
 
@@ -68,12 +83,17 @@ class Playback(commands.Cog, wavelink.WavelinkMixin):
 
             if not tracks:
                 tracks = await self.bot.wavelink.get_tracks(self.bot.settings["coffinVideoURL"])
+                if not tracks:
+                    return await ctx.send(f"{self.bot.settings['formats']['error']} **YT Ratelimited:** I am unable to "
+                                          f"play this video as I am currently ratelimited by YouTube, please try "
+                                          f"again later.")
 
             player = self.bot.wavelink.get_player(ctx.guild.id)
             if not player.is_connected:
                 await self.connect(ctx.author.voice.channel, ctx.guild)
 
             await ctx.send(file=discord.File(fp=buffer, filename="coffin.gif"))
+            self.channels.add(ctx.guild.id, ctx.channel.id)
             await player.play(tracks[0])
 
     @commands.command(name="stop", description="Stops the bot from playing audio and makes it leave the channel.")
@@ -87,6 +107,7 @@ class Playback(commands.Cog, wavelink.WavelinkMixin):
                                           f"the same channel as the bot to execute this command.")
 
                 await player.destroy()
+                self.channels.pop(ctx.guild.id)
                 await ctx.send(f"{self.bot.settings['formats']['success']} **Stopped playing:** I have stopped playing "
                                f"and left the channel.")
             else:
